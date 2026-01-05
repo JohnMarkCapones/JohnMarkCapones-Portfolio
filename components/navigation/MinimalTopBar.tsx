@@ -28,6 +28,26 @@ const IconMap: Record<string, React.ReactNode> = {
       />
     </svg>
   ),
+  user: (
+    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+      />
+    </svg>
+  ),
+  terminal: (
+    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+      />
+    </svg>
+  ),
   folder: (
     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path
@@ -122,7 +142,7 @@ export function MinimalTopBar() {
                     className={cn(
                       'group relative flex h-12 w-12 items-center justify-center rounded-xl transition-all duration-300',
                       active
-                        ? 'bg-gradient-to-br from-primary/30 to-accent-green/20 text-primary shadow-lg shadow-primary/20'
+                        ? 'bg-primary/10 text-primary'
                         : 'text-text-secondary hover:bg-surface-secondary hover:text-text-primary'
                     )}
                   >
@@ -133,7 +153,7 @@ export function MinimalTopBar() {
                     {active && (
                       <motion.div
                         layoutId="nav-active-indicator"
-                        className="absolute -inset-0.5 rounded-xl bg-gradient-to-br from-primary/40 to-accent-green/30 blur-sm"
+                        className="absolute -inset-0.5 rounded-xl border-2 border-primary/40"
                         transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                       />
                     )}

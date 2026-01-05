@@ -1,11 +1,13 @@
 /**
  * Stats Page
- * Development metrics and statistics dashboard
+ * Development metrics and statistics dashboard with GitHub integration
  */
 
 'use client';
 
 import { motion } from 'framer-motion';
+import { GitHubStats, ContributionGraph, GitHubRepos } from '@/components/github';
+import { Badge } from '@/components/ui/badge';
 
 const stats = [
   {
@@ -75,8 +77,8 @@ const skills = [
 
 export default function StatsPage() {
   return (
-    <main className="container-custom py-20 lg:py-32">
-      <div className="mx-auto max-w-6xl">
+    <main className="min-h-screen py-20 lg:py-32">
+      <div className="container-custom">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -84,11 +86,14 @@ export default function StatsPage() {
           transition={{ duration: 0.5 }}
           className="mb-16 text-center"
         >
+          <Badge variant="primary" className="mb-4">
+            Statistics & Metrics
+          </Badge>
           <h1 className="font-heading text-5xl font-bold text-text-primary md:text-6xl lg:text-7xl">
-            Statistics
+            Development Stats
           </h1>
           <p className="mt-6 text-xl text-text-secondary">
-            A glimpse into my development journey
+            A comprehensive look at my development journey and contributions
           </p>
         </motion.div>
 
@@ -122,6 +127,23 @@ export default function StatsPage() {
             </motion.div>
           ))}
         </div>
+
+        {/* GitHub Stats Section */}
+        <section className="mb-20">
+          <GitHubStats />
+        </section>
+
+        {/* GitHub Contribution Graph */}
+        <section className="mb-20">
+          <div className="mx-auto max-w-5xl">
+            <ContributionGraph />
+          </div>
+        </section>
+
+        {/* GitHub Repositories */}
+        <section className="mb-20">
+          <GitHubRepos />
+        </section>
 
         {/* Skills Section */}
         <motion.div

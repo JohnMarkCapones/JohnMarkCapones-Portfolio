@@ -8,6 +8,7 @@
 import { motion } from 'framer-motion';
 import { socialLinks } from '@/data/personal';
 import { CONTACT_INFO } from '@/lib/constants';
+import { ContactWizard } from '@/components/contact/ContactWizard';
 
 export default function ContactPage() {
   return (
@@ -28,6 +29,28 @@ export default function ContactPage() {
           </p>
         </motion.div>
 
+        {/* Contact Wizard */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mb-16"
+        >
+          <ContactWizard />
+        </motion.div>
+
+        {/* Divider */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="mb-16 flex items-center gap-4"
+        >
+          <div className="h-px flex-1 bg-surface-border" />
+          <span className="text-sm text-text-tertiary">Or reach out directly</span>
+          <div className="h-px flex-1 bg-surface-border" />
+        </motion.div>
+
         {/* Contact Methods */}
         <div className="mb-16 grid gap-6 md:grid-cols-2">
           {/* Email */}
@@ -35,7 +58,7 @@ export default function ContactPage() {
             href={`mailto:${CONTACT_INFO.email}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
             whileHover={{ scale: 1.02, y: -5 }}
             className="group relative overflow-hidden rounded-2xl border border-surface-border bg-surface-secondary/50 p-8 backdrop-blur-sm transition-all"
           >
@@ -62,7 +85,7 @@ export default function ContactPage() {
             href={`tel:${CONTACT_INFO.phone}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
             whileHover={{ scale: 1.02, y: -5 }}
             className="group relative overflow-hidden rounded-2xl border border-surface-border bg-surface-secondary/50 p-8 backdrop-blur-sm transition-all"
           >
@@ -88,7 +111,7 @@ export default function ContactPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
             whileHover={{ scale: 1.02, y: -5 }}
             className="group relative overflow-hidden rounded-2xl border border-surface-border bg-surface-secondary/50 p-8 backdrop-blur-sm transition-all"
           >
@@ -119,7 +142,7 @@ export default function ContactPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
             whileHover={{ scale: 1.02, y: -5 }}
             className="group relative overflow-hidden rounded-2xl border border-surface-border bg-surface-secondary/50 p-8 backdrop-blur-sm transition-all"
           >
@@ -145,7 +168,7 @@ export default function ContactPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          transition={{ duration: 0.5, delay: 0.9 }}
           className="rounded-2xl border border-surface-border bg-surface-secondary/30 p-12 backdrop-blur-sm"
         >
           <h2 className="mb-8 text-center font-heading text-3xl font-bold text-text-primary">
@@ -160,7 +183,7 @@ export default function ContactPage() {
                 rel="noopener noreferrer"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
+                transition={{ duration: 0.3, delay: 1.0 + index * 0.1 }}
                 whileHover={{ scale: 1.15, y: -5 }}
                 whileTap={{ scale: 0.95 }}
                 className="group relative flex h-16 w-16 items-center justify-center rounded-xl border border-surface-border bg-surface-secondary/50 text-text-secondary backdrop-blur-sm transition-all hover:border-primary/30 hover:text-primary"

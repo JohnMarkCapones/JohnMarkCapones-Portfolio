@@ -25,6 +25,7 @@
     "cloud-engineer"
   ],
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-icons": "^1.3.2",
     "@radix-ui/react-slot": "^1.2.4",
     "@types/node": "^25.0.3",
@@ -33,12 +34,14 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.26",
-    "gsap": "^3.14.2",
     "next": "^16.1.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "react-hook-form": "^7.69.0",
+    "resend": "^6.6.0",
     "tailwind-merge": "^3.4.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "zod": "^4.3.4"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.23",

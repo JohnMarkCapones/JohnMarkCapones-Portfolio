@@ -7,3 +7,7 @@ export { ProjectCard, ProjectCardSkeleton, type ProjectCardProps } from './Proje
 export { ProjectFilters, type ProjectFiltersProps } from './ProjectFilters';
 export { AnimatedProjectCard, type AnimatedProjectCardProps } from './AnimatedProjectCard';
 export { ProjectPageWrapper, type ProjectPageWrapperProps } from './ProjectPageWrapper';
+export { HeroProjectCard, type HeroProjectCardProps } from './HeroProjectCard';
+export { EnhancedProjectCard, type EnhancedProjectCardProps } from './EnhancedProjectCard';
+export { ImageGallery } from './ImageGallery';
+export { ProjectTechStack } from './ProjectTechStack';

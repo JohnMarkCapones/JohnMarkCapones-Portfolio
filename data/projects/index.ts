@@ -30,7 +30,8 @@ export const campusConnect: Project = {
     'TypeScript',
     'Supabase',
     'PostgreSQL',
-    'Cloudflare R2',
+    'Cloudflare',
+    'Render',
     'Docker',
     'TailwindCSS',
     'GSAP',
@@ -46,6 +47,7 @@ export const campusConnect: Project = {
     'Supabase',
     'PostgreSQL',
     'Cloudflare',
+    'Render',
     'Docker',
     'GitHub Actions',
     'TailwindCSS',
@@ -54,11 +56,41 @@ export const campusConnect: Project = {
     'C#',
   ],
 
+  role: {
+    title: 'Full-Stack Developer & Team Lead',
+    teamSize: 'Team of 5 developers',
+    responsibilities: [
+      'Led capstone team of 5 developers from ideation to production launch',
+      'Architected full-stack system using Next.js, NestJS, and Supabase',
+      'Designed and implemented PostgreSQL database schema with Row Level Security',
+      'Built REST API backend with NestJS handling 3,000+ concurrent users',
+      'Developed responsive frontend with Next.js and React, achieving 90+ Lighthouse score',
+      'Implemented real-time features using WebSockets and Supabase subscriptions',
+      'Created mobile app (React Native) and desktop app (C#) for cross-platform access',
+      'Set up CI/CD pipeline with GitHub Actions and Docker containerization',
+      'Managed project timeline, conducted code reviews, and sprint planning',
+    ],
+    contributions: [
+      'Reduced deployment time from 45 minutes to 3 minutes with Docker automation',
+      'Optimized database queries, achieving sub-100ms response times for complex queries',
+      'Implemented comprehensive security measures including encryption and audit logging',
+      'Designed anti-cheating system for quizzes, reducing incidents by 85%',
+      'Achieved 99.9% uptime serving 3,000+ users with sub-2-second page loads',
+    ],
+  },
+
   timeline: {
     started: 'February 2023',
     launched: 'November 2025',
     duration: '2+ years',
   },
+
+  images: [
+    '/projects/campus-connect/dashboard.png',
+    '/projects/campus-connect/quiz-system.png',
+    '/projects/campus-connect/student-management.png',
+    '/projects/campus-connect/mobile-app.png',
+  ],
 
   status: 'live',
 
@@ -163,10 +195,35 @@ export const xiraya: Project = {
 
   skills: ['Laravel', 'Nuxt.js', 'MongoDB', 'Docker', 'Cloudflare', 'TailwindCSS'],
 
+  role: {
+    title: 'Full-Stack Developer',
+    teamSize: 'Solo project',
+    responsibilities: [
+      'Designed and built complete e-commerce platform from scratch',
+      'Developed RESTful API backend using Laravel with MongoDB integration',
+      'Created SEO-optimized frontend with Nuxt.js and Server-Side Rendering',
+      'Implemented secure payment gateway integration with error handling',
+      'Built admin dashboard for product and inventory management',
+      'Set up Docker containerization for consistent development environment',
+    ],
+    contributions: [
+      'Reduced API response time from 800ms to under 150ms with optimization',
+      'Implemented MongoDB aggregation pipelines for complex catalog queries',
+      'Added Redis caching layer reducing database load by 60%',
+      'Achieved 95+ Lighthouse score with SSR and Cloudflare CDN',
+    ],
+  },
+
   timeline: {
     started: '2023',
     duration: '6 months',
   },
+
+  images: [
+    '/projects/xiraya/homepage.png',
+    '/projects/xiraya/product-catalog.png',
+    '/projects/xiraya/admin-dashboard.png',
+  ],
 
   status: 'completed',
 
@@ -232,10 +289,36 @@ export const pharmacySystem: Project = {
 
   skills: ['Laravel', 'React', 'C#', 'MySQL', 'Docker', 'TailwindCSS'],
 
+  role: {
+    title: 'Full-Stack & Desktop Application Developer',
+    teamSize: 'Solo project',
+    responsibilities: [
+      'Developed hybrid pharmacy management system (web + desktop applications)',
+      'Built Laravel backend API with React admin dashboard',
+      'Created Windows POS application using C# WinForms with barcode scanning',
+      'Designed MySQL database schema with transaction integrity',
+      'Implemented offline-first architecture with local SQLite cache',
+      'Built real-time inventory sync between POS terminals and web dashboard',
+      'Added HIPAA-compliant prescription management with audit logging',
+    ],
+    contributions: [
+      'Enabled offline POS functionality with automatic sync when online',
+      'Reduced inventory discrepancies by 95% with real-time WebSocket updates',
+      'Improved transaction speed to under 100ms for POS operations',
+      'Processed 50-100 daily transactions managing 1,000+ inventory items',
+    ],
+  },
+
   timeline: {
     started: '2022',
     duration: '8 months',
   },
+
+  images: [
+    '/projects/pharmacy/pos-system.png',
+    '/projects/pharmacy/dashboard.png',
+    '/projects/pharmacy/inventory.png',
+  ],
 
   status: 'live',
 
@@ -323,10 +406,35 @@ export const mediaManagement: Project = {
 
   skills: ['AWS', 'DynamoDB', 'NestJS', 'TypeScript', 'Docker'],
 
+  role: {
+    title: 'Backend & Cloud Engineer',
+    teamSize: 'Solo project (client work)',
+    responsibilities: [
+      'Architected serverless media management platform on AWS infrastructure',
+      'Designed DynamoDB schema with Global Secondary Indexes for efficient querying',
+      'Built NestJS API backend with Fastify for high-performance requests',
+      'Implemented S3 lifecycle policies for cost-optimized storage',
+      'Created IAM role system with pre-signed URLs for secure temporary access',
+      'Set up automated thumbnail generation with AWS Lambda',
+      'Integrated CloudFront CDN for global media delivery',
+    ],
+    contributions: [
+      'Reduced AWS costs by 40% with storage tier optimization',
+      'Achieved sub-50ms metadata query latency with DynamoDB optimization',
+      'Scaled platform to support 1,000+ concurrent users',
+      'Implemented efficient caching reducing S3 bandwidth costs by 60%',
+    ],
+  },
+
   timeline: {
     started: '2024',
     duration: '4 months',
   },
+
+  images: [
+    '/projects/media-platform/architecture.png',
+    '/projects/media-platform/dashboard.png',
+  ],
 
   status: 'completed',
 

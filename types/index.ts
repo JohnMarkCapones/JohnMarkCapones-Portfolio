@@ -47,6 +47,13 @@ export interface Project {
   skills: string[]; // Links to skill names
 
   // Project details
+  role?: {
+    title: string; // e.g., "Full-Stack Developer & Team Lead"
+    responsibilities: string[]; // What you did
+    teamSize?: string; // e.g., "Solo" or "Team of 5"
+    contributions?: string[]; // Specific contributions/impact
+  };
+
   timeline: {
     started: string; // ISO date string or "Month Year"
     launched?: string;

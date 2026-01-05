@@ -1,20 +1,21 @@
 /**
  * Journey Timeline Section Component
- * Professional journey and key milestones in visual timeline
+ * Professional journey and key milestones in visual timeline with year grouping
  */
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import type { JSX } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { timelineEvents, timelineStats } from '@/data/timeline';
+import { timelineEvents, timelineStats, getAllYears } from '@/data/timeline';
 import type { TimelineEvent } from '@/types';
 import { cn } from '@/lib/utils';
 import { ScrollReveal } from '@/components/animations';
-import { fadeInUp, fadeInLeft, fadeInRight, staggerContainer, staggerItem } from '@/lib/animations';
+import { fadeInUp, fadeInLeft, fadeInRight } from '@/lib/animations';
+import { TimelineSidebar } from './TimelineSidebar';
 
 /**
  * Timeline Event Icon Component
@@ -73,38 +74,101 @@ function getEventBadgeVariant(type: TimelineEvent['type']): 'primary' | 'success
 }
 
 /**
+ * Check if event is a major milestone
+ */
+function isMajorMilestone(event: TimelineEvent): boolean {
+  return event.type === 'milestone' || event.id === 'campus-launch-2025' || event.id === 'graduate-shs-2020';
+}
+
+/**
  * Journey Timeline Section
- *
- * Visual timeline of professional journey
- * Chronological display from 2018 to present
- *
- * Features:
- * - Filter by event type
- * - Vertical timeline with connecting lines
- * - Event type indicators
- * - Year markers
- * - Responsive design
  */
 export function JourneyTimeline() {
   const [filter, setFilter] = useState<TimelineEvent['type'] | 'all'>('all');
+  const [currentYear, setCurrentYear] = useState<number | null>(null);
+  const yearRefs = useRef<Map<number, HTMLDivElement>>(new Map());
 
   const filteredEvents = filter === 'all'
     ? timelineEvents
     : timelineEvents.filter((event) => event.type === filter);
 
-  const filterOptions: Array<{ value: TimelineEvent['type'] | 'all'; label: string }> = [
-    { value: 'all', label: 'All Events' },
-    { value: 'milestone', label: 'Milestones' },
-    { value: 'achievement', label: 'Achievements' },
-    { value: 'project', label: 'Projects' },
-    { value: 'learning', label: 'Learning' },
-    { value: 'education', label: 'Education' },
-    { value: 'work', label: 'Work' },
+  const allYears = useMemo(() => getAllYears(), []);
+
+  // Group events by year
+  const eventsByYear = useMemo(() => {
+    const grouped = new Map<number, TimelineEvent[]>();
+    filteredEvents.forEach((event) => {
+      const yearEvents = grouped.get(event.year) || [];
+      yearEvents.push(event);
+      grouped.set(event.year, yearEvents);
+    });
+    return Array.from(grouped.entries()).sort(([a], [b]) => a - b);
+  }, [filteredEvents]);
+
+  const filterOptions: Array<{ value: TimelineEvent['type'] | 'all'; label: string; count: number }> = [
+    { value: 'all', label: 'All Events', count: timelineEvents.length },
+    { value: 'milestone', label: 'Milestones', count: timelineStats.milestones },
+    { value: 'achievement', label: 'Achievements', count: timelineStats.achievements },
+    { value: 'project', label: 'Projects', count: timelineStats.projects },
+    { value: 'learning', label: 'Learning', count: timelineStats.learningEvents },
+    { value: 'education', label: 'Education', count: timelineStats.educationEvents },
+    { value: 'work', label: 'Work', count: timelineEvents.filter(e => e.type === 'work').length },
   ];
 
+  // Handle year click from sidebar - smooth scroll to year
+  const handleYearClick = useCallback((year: number) => {
+    const element = yearRefs.current.get(year);
+    if (element) {
+      const offset = 100; // Offset for fixed header
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+    }
+  }, []);
+
+  // Track current year with IntersectionObserver
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -70% 0px',
+      threshold: 0,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const year = parseInt(entry.target.getAttribute('data-year') || '0', 10);
+          if (year) {
+            setCurrentYear(year);
+          }
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    // Observe all year sections
+    yearRefs.current.forEach((element) => {
+      observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, [eventsByYear]);
+
   return (
-    <section id="timeline" className="container-custom section-spacing">
-      <div className="mx-auto max-w-5xl">
+    <section id="timeline" className="container-custom section-spacing relative">
+      {/* Timeline Sidebar Navigator */}
+      <TimelineSidebar
+        years={allYears}
+        currentYear={currentYear}
+        onYearClick={handleYearClick}
+      />
+
+      <div className="mx-auto max-w-4xl xl:max-w-5xl">
         {/* Section Header */}
         <ScrollReveal variant={fadeInUp}>
           <div className="mb-12 text-center">
@@ -120,184 +184,273 @@ export function JourneyTimeline() {
           </div>
         </ScrollReveal>
 
-        {/* Stats Summary */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-100px', amount: 0.3 }}
-          variants={staggerContainer}
-          className="mb-12 grid gap-4 sm:grid-cols-2 md:grid-cols-4"
-        >
-          <motion.div variants={staggerItem}>
-            <Card variant="hover">
-              <CardContent className="p-4 text-center">
-                <p className="text-2xl font-bold text-primary">{timelineStats.totalEvents}</p>
-                <p className="text-sm text-text-tertiary">Total Events</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-          <motion.div variants={staggerItem}>
-            <Card variant="hover">
-              <CardContent className="p-4 text-center">
-                <p className="text-2xl font-bold text-accent-green">{timelineStats.milestones}</p>
-                <p className="text-sm text-text-tertiary">Milestones</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-          <motion.div variants={staggerItem}>
-            <Card variant="hover">
-              <CardContent className="p-4 text-center">
-                <p className="text-2xl font-bold text-accent-amber">{timelineStats.projects}</p>
-                <p className="text-sm text-text-tertiary">Projects</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-          <motion.div variants={staggerItem}>
-            <Card variant="hover">
-              <CardContent className="p-4 text-center">
-                <p className="text-2xl font-bold text-accent-blue">{timelineStats.learningEvents}</p>
-                <p className="text-sm text-text-tertiary">Skills Learned</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </motion.div>
-
-        {/* Filter Buttons */}
+        {/* Enhanced Stats Dashboard */}
         <ScrollReveal variant={fadeInUp} delay={0.1}>
-          <div className="mb-8">
-            <div className="flex flex-wrap justify-center gap-2">
-              {filterOptions.map((option) => (
-                <button
-                key={option.value}
-                onClick={() => setFilter(option.value)}
-                className={cn(
-                  'rounded-full border px-4 py-2 text-sm font-medium transition-all',
-                  filter === option.value
-                    ? 'border-primary bg-primary/10 text-primary'
-                    : 'border-surface-border bg-surface-secondary text-text-secondary hover:border-primary/50 hover:text-text-primary'
-                )}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
+          <div className="mb-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <motion.div
+              whileHover={{ scale: 1.05, y: -5 }}
+              className="group relative overflow-hidden rounded-xl border border-surface-border bg-gradient-to-br from-primary/5 to-primary/10 p-6 transition-all hover:border-primary/50"
+            >
+              <div className="relative z-10">
+                <p className="text-3xl font-bold text-primary">{timelineStats.totalEvents}</p>
+                <p className="mt-1 text-sm text-text-tertiary">Total Events</p>
+              </div>
+              <div className="absolute -right-4 -top-4 text-6xl opacity-10">📅</div>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.05, y: -5 }}
+              className="group relative overflow-hidden rounded-xl border border-surface-border bg-gradient-to-br from-accent-green/5 to-accent-green/10 p-6 transition-all hover:border-accent-green/50"
+            >
+              <div className="relative z-10">
+                <p className="text-3xl font-bold text-accent-green">{timelineStats.milestones}</p>
+                <p className="mt-1 text-sm text-text-tertiary">Major Milestones</p>
+              </div>
+              <div className="absolute -right-4 -top-4 text-6xl opacity-10">🏆</div>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.05, y: -5 }}
+              className="group relative overflow-hidden rounded-xl border border-surface-border bg-gradient-to-br from-accent-amber/5 to-accent-amber/10 p-6 transition-all hover:border-accent-amber/50"
+            >
+              <div className="relative z-10">
+                <p className="text-3xl font-bold text-accent-amber">{timelineStats.projects}</p>
+                <p className="mt-1 text-sm text-text-tertiary">Projects Built</p>
+              </div>
+              <div className="absolute -right-4 -top-4 text-6xl opacity-10">🚀</div>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.05, y: -5 }}
+              className="group relative overflow-hidden rounded-xl border border-surface-border bg-gradient-to-br from-accent-blue/5 to-accent-blue/10 p-6 transition-all hover:border-accent-blue/50"
+            >
+              <div className="relative z-10">
+                <p className="text-3xl font-bold text-accent-blue">{timelineStats.learningEvents}</p>
+                <p className="mt-1 text-sm text-text-tertiary">Skills Learned</p>
+              </div>
+              <div className="absolute -right-4 -top-4 text-6xl opacity-10">📚</div>
+            </motion.div>
           </div>
         </ScrollReveal>
 
-        {/* Timeline */}
-        <div className="relative">
-          {/* Vertical Line */}
-          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/50 via-primary/20 to-transparent md:left-1/2" />
-
-          {/* Events */}
-          <div className="space-y-8">
-            {filteredEvents.map((event, index) => {
-              const isEven = index % 2 === 0;
-              const isLast = index === filteredEvents.length - 1;
-
-              return (
-                <ScrollReveal
-                  key={event.id}
-                  variant={isEven ? fadeInLeft : fadeInRight}
-                  delay={0.05}
+        {/* Filter Buttons */}
+        <ScrollReveal variant={fadeInUp} delay={0.15}>
+          <div className="mb-12">
+            <div className="flex flex-wrap justify-center gap-2">
+              {filterOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setFilter(option.value)}
+                  className={cn(
+                    'group relative overflow-hidden rounded-full border px-4 py-2 text-sm font-medium transition-all',
+                    filter === option.value
+                      ? 'border-primary bg-primary/10 text-primary shadow-lg shadow-primary/20'
+                      : 'border-surface-border bg-surface-secondary text-text-secondary hover:border-primary/50 hover:text-text-primary'
+                  )}
                 >
-                  <div
-                    className={cn(
-                      'relative flex items-center gap-8',
-                      isEven ? 'md:flex-row' : 'md:flex-row-reverse'
-                    )}
-                  >
-                  {/* Timeline Dot */}
-                  <div className="absolute left-8 flex h-4 w-4 items-center justify-center md:left-1/2 md:-ml-2">
-                    <div
-                      className={cn(
-                        'h-4 w-4 rounded-full border-4 border-surface-primary shadow-lg transition-all',
-                        event.type === 'milestone' && 'bg-primary',
-                        event.type === 'achievement' && 'bg-accent-green',
-                        event.type === 'project' && 'bg-accent-amber',
-                        event.type === 'learning' && 'bg-accent-blue',
-                        event.type === 'education' && 'bg-primary',
-                        event.type === 'work' && 'bg-accent-green',
-                        isLast && 'animate-pulse'
-                      )}
-                    />
+                  <span className="relative z-10 flex items-center gap-2">
+                    {option.label}
+                    <span className={cn(
+                      'rounded-full px-1.5 py-0.5 text-xs',
+                      filter === option.value
+                        ? 'bg-primary/20 text-primary'
+                        : 'bg-surface-tertiary text-text-tertiary'
+                    )}>
+                      {option.count}
+                    </span>
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </ScrollReveal>
+
+        {/* Timeline with Year Grouping */}
+        <div className="relative">
+          {/* Animated Vertical Line */}
+          <motion.div
+            className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/50 via-primary/20 to-transparent md:left-1/2"
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            style={{ transformOrigin: 'top' }}
+          />
+
+          {/* Events Grouped by Year */}
+          <div className="space-y-16">
+            {eventsByYear.map(([year, events]) => (
+              <div
+                key={year}
+                className="relative"
+                ref={(el) => {
+                  if (el) {
+                    yearRefs.current.set(year, el);
+                  } else {
+                    yearRefs.current.delete(year);
+                  }
+                }}
+                data-year={year}
+              >
+                {/* Year Header */}
+                <ScrollReveal variant={fadeInUp}>
+                  <div className="relative mb-8 flex items-center justify-center">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-surface-border" />
+                    </div>
+                    <div className="relative z-10 rounded-full border-2 border-primary/30 bg-surface-primary px-6 py-2 shadow-lg">
+                      <h3 className="text-2xl font-bold text-gradient">{year}</h3>
+                    </div>
                   </div>
+                </ScrollReveal>
 
-                  {/* Spacer for desktop */}
-                  <div className="hidden flex-1 md:block" />
+                {/* Events for this year */}
+                <div className="space-y-8">
+                  {events.map((event, index) => {
+                    const isEven = index % 2 === 0;
+                    const isMajor = isMajorMilestone(event);
+                    const isLast = index === events.length - 1 && year === eventsByYear[eventsByYear.length - 1]?.[0];
 
-                  {/* Event Card */}
-                  <Card
-                    variant="hover"
-                    className={cn(
-                      'ml-20 flex-1 transition-all duration-300 hover:border-primary/50 hover:shadow-glow-sm md:ml-0',
-                      isEven ? 'md:text-right' : 'md:text-left'
-                    )}
-                  >
-                    <CardContent className="p-6">
-                      {/* Year & Month */}
-                      <div className={cn('mb-2 flex items-center gap-2', isEven ? 'md:justify-end' : 'md:justify-start')}>
-                        <Badge variant="secondary" size="sm">
-                          {event.month ? `${event.year}-${String(event.month).padStart(2, '0')}` : event.year}
-                        </Badge>
-                        <Badge variant={getEventBadgeVariant(event.type)} size="sm">
-                          {event.type}
-                        </Badge>
-                      </div>
-
-                      {/* Title */}
-                      <div className={cn('mb-3 flex items-start gap-3', isEven ? 'md:flex-row-reverse' : 'md:flex-row')}>
+                    return (
+                      <ScrollReveal
+                        key={event.id}
+                        variant={isEven ? fadeInLeft : fadeInRight}
+                        delay={0.1}
+                      >
                         <div
                           className={cn(
-                            'flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg',
-                            event.type === 'milestone' && 'bg-primary/10 text-primary',
-                            event.type === 'achievement' && 'bg-accent-green/10 text-accent-green',
-                            event.type === 'project' && 'bg-accent-amber/10 text-accent-amber',
-                            event.type === 'learning' && 'bg-accent-blue/10 text-accent-blue',
-                            event.type === 'education' && 'bg-primary/10 text-primary',
-                            event.type === 'work' && 'bg-accent-green/10 text-accent-green'
+                            'relative flex items-center gap-8',
+                            isEven ? 'md:flex-row' : 'md:flex-row-reverse'
                           )}
                         >
-                          <TimelineIcon event={event} />
-                        </div>
-                        <h3 className="flex-1 text-lg font-bold text-text-primary">{event.title}</h3>
-                      </div>
+                          {/* Timeline Dot */}
+                          <div className="absolute left-8 flex items-center justify-center md:left-1/2 md:-ml-2">
+                            <motion.div
+                              whileHover={{ scale: 1.3 }}
+                              className={cn(
+                                'rounded-full border-4 border-surface-primary shadow-lg transition-all',
+                                isMajor ? 'h-6 w-6' : 'h-4 w-4',
+                                event.type === 'milestone' && 'bg-primary shadow-primary/50',
+                                event.type === 'achievement' && 'bg-accent-green shadow-accent-green/50',
+                                event.type === 'project' && 'bg-accent-amber shadow-accent-amber/50',
+                                event.type === 'learning' && 'bg-accent-blue',
+                                event.type === 'education' && 'bg-primary',
+                                event.type === 'work' && 'bg-accent-green',
+                                isLast && 'animate-pulse'
+                              )}
+                            />
+                          </div>
 
-                      {/* Description */}
-                      <p className="mb-3 text-sm leading-relaxed text-text-secondary">{event.description}</p>
+                          {/* Spacer for desktop */}
+                          <div className="hidden flex-1 md:block" />
 
-                      {/* Tags */}
-                      {event.tags && event.tags.length > 0 && (
-                        <div className={cn('flex flex-wrap gap-1', isEven ? 'md:justify-end' : 'md:justify-start')}>
-                          {event.tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="rounded-full bg-surface-tertiary px-2 py-0.5 text-xs text-text-tertiary"
+                          {/* Event Card */}
+                          <motion.div
+                            whileHover={{ scale: 1.02, y: -4 }}
+                            className={cn(
+                              'ml-20 flex-1 md:ml-0',
+                              isMajor && 'md:scale-105'
+                            )}
+                          >
+                            <Card
+                              variant="hover"
+                              className={cn(
+                                'transition-all duration-300',
+                                isMajor
+                                  ? 'border-2 border-primary/50 bg-gradient-to-br from-primary/5 to-primary/10 shadow-glow-md'
+                                  : 'hover:border-primary/30 hover:shadow-glow-sm',
+                                isEven ? 'md:text-right' : 'md:text-left'
+                              )}
                             >
-                              #{tag}
-                            </span>
-                          ))}
+                              <CardContent className={cn('p-6', isMajor && 'p-8')}>
+                                {/* Year & Month with Type Badge */}
+                                <div className={cn('mb-3 flex items-center gap-2', isEven ? 'md:justify-end' : 'md:justify-start')}>
+                                  <Badge variant="secondary" size="sm">
+                                    {event.month ? `${event.year}-${String(event.month).padStart(2, '0')}` : event.year}
+                                  </Badge>
+                                  <Badge variant={getEventBadgeVariant(event.type)} size="sm">
+                                    {event.type}
+                                  </Badge>
+                                  {isMajor && (
+                                    <Badge variant="primary" size="sm" className="gap-1">
+                                      ⭐ Major
+                                    </Badge>
+                                  )}
+                                </div>
+
+                                {/* Title with Icon */}
+                                <div className={cn('mb-4 flex items-start gap-3', isEven ? 'md:flex-row-reverse' : 'md:flex-row')}>
+                                  <div
+                                    className={cn(
+                                      'flex flex-shrink-0 items-center justify-center rounded-lg transition-all',
+                                      isMajor ? 'h-12 w-12' : 'h-10 w-10',
+                                      event.type === 'milestone' && 'bg-primary/10 text-primary',
+                                      event.type === 'achievement' && 'bg-accent-green/10 text-accent-green',
+                                      event.type === 'project' && 'bg-accent-amber/10 text-accent-amber',
+                                      event.type === 'learning' && 'bg-accent-blue/10 text-accent-blue',
+                                      event.type === 'education' && 'bg-primary/10 text-primary',
+                                      event.type === 'work' && 'bg-accent-green/10 text-accent-green'
+                                    )}
+                                  >
+                                    <TimelineIcon event={event} />
+                                  </div>
+                                  <h3 className={cn(
+                                    'flex-1 font-bold text-text-primary',
+                                    isMajor ? 'text-xl md:text-2xl' : 'text-lg'
+                                  )}>
+                                    {event.title}
+                                  </h3>
+                                </div>
+
+                                {/* Description */}
+                                <p className={cn(
+                                  'mb-4 leading-relaxed text-text-secondary',
+                                  isMajor ? 'text-base' : 'text-sm'
+                                )}>
+                                  {event.description}
+                                </p>
+
+                                {/* Tags */}
+                                {event.tags && event.tags.length > 0 && (
+                                  <div className={cn('flex flex-wrap gap-1.5', isEven ? 'md:justify-end' : 'md:justify-start')}>
+                                    {event.tags.map((tag) => (
+                                      <span
+                                        key={tag}
+                                        className="rounded-full bg-surface-tertiary px-2.5 py-1 text-xs text-text-tertiary transition-colors hover:bg-surface-border hover:text-text-secondary"
+                                      >
+                                        #{tag}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
+                              </CardContent>
+                            </Card>
+                          </motion.div>
                         </div>
-                      )}
-                    </CardContent>
-                  </Card>
+                      </ScrollReveal>
+                    );
+                  })}
                 </div>
-                </ScrollReveal>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Current Status Indicator */}
         <ScrollReveal variant={fadeInUp} delay={0.2}>
-          <div className="mt-12 text-center">
-            <Card glass className="inline-block">
+          <div className="mt-16 text-center">
+            <Card className="inline-block border-accent-green/30 bg-gradient-to-br from-accent-green/5 to-accent-green/10">
               <CardContent className="p-6">
-                <div className="flex items-center gap-3">
-                  <div className="h-3 w-3 animate-pulse rounded-full bg-accent-green" />
-                  <p className="font-medium">
-                    Currently: 4th Year BSIT Student | Learning Kubernetes & AWS
-                  </p>
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    <div className="h-3 w-3 animate-pulse rounded-full bg-accent-green" />
+                    <div className="absolute inset-0 h-3 w-3 animate-ping rounded-full bg-accent-green opacity-75" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-semibold text-text-primary">Currently Active</p>
+                    <p className="text-sm text-text-secondary">
+                      4th Year BSIT Student | Mastering Kubernetes & AWS
+                    </p>
+                  </div>
                 </div>
               </CardContent>
             </Card>

@@ -7,7 +7,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { ProjectPageWrapper } from '@/components/projects';
+import { ProjectPageWrapper, ImageGallery, ProjectTechStack } from '@/components/projects';
 import { allProjects, getProjectBySlug } from '@/data/projects';
 
 /**
@@ -123,6 +123,19 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </div>
       </div>
 
+      {/* Tech Stack - Asymmetric Bento Grid */}
+      <ProjectTechStack techStack={project.techStack} projectTitle={project.title} />
+
+      {/* Image Gallery */}
+      {project.images && project.images.length > 0 && (
+        <div className="border-b border-surface-border bg-surface-secondary/30">
+          <div className="container-custom py-12">
+            <h2 className="mb-6 text-2xl font-bold">Project Screenshots</h2>
+            <ImageGallery images={project.images} projectTitle={project.title} />
+          </div>
+        </div>
+      )}
+
       {/* Content */}
       <div className="container-custom py-16">
         <div className="grid gap-12 lg:grid-cols-3">
@@ -133,6 +146,82 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               <h2 className="mb-4 text-2xl font-bold">Overview</h2>
               <p className="text-lg leading-relaxed text-text-secondary">{project.description}</p>
             </section>
+
+            {/* My Role */}
+            {project.role && (
+              <section className="mb-12">
+                <h2 className="mb-6 text-2xl font-bold">My Role</h2>
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="mb-4 flex flex-wrap items-center gap-2">
+                      <Badge variant="primary" className="text-base">
+                        {project.role.title}
+                      </Badge>
+                      {project.role.teamSize && (
+                        <Badge variant="secondary">{project.role.teamSize}</Badge>
+                      )}
+                    </div>
+
+                    {/* Responsibilities */}
+                    <div className="mb-6">
+                      <h3 className="mb-3 font-semibold text-text-primary">Responsibilities:</h3>
+                      <div className="space-y-2">
+                        {project.role.responsibilities.map((responsibility, index) => (
+                          <div key={index} className="flex items-start gap-3">
+                            <svg
+                              className="mt-1 h-5 w-5 flex-shrink-0 text-primary"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                              />
+                            </svg>
+                            <p className="text-sm text-text-secondary">{responsibility}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Key Contributions */}
+                    {project.role.contributions && project.role.contributions.length > 0 && (
+                      <div className="rounded-lg border border-accent-green/30 bg-accent-green/5 p-4">
+                        <h3 className="mb-3 flex items-center gap-2 font-semibold text-accent-green">
+                          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                            />
+                          </svg>
+                          Key Contributions & Impact
+                        </h3>
+                        <div className="space-y-2">
+                          {project.role.contributions.map((contribution, index) => (
+                            <div key={index} className="flex items-start gap-3">
+                              <svg
+                                className="mt-1 h-4 w-4 flex-shrink-0 text-accent-green"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                              <p className="text-sm text-text-secondary">{contribution}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </section>
+            )}
 
             {/* Key Features */}
             {project.features && project.features.length > 0 && (
@@ -210,20 +299,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Tech Stack */}
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="mb-4 font-bold">Tech Stack</h3>
-                <div className="flex flex-wrap gap-2">
-                  {project.techStack.map((tech) => (
-                    <Badge key={tech} variant="secondary">
-                      {tech}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
             {/* Timeline */}
             <Card>
               <CardContent className="p-6">

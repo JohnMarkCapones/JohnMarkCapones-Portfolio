@@ -1,7 +1,9 @@
 /**
  * Animation Components
- * Export all animation components
+ * Lightweight animation system using Framer Motion
+ * Optimized for performance and smooth user experience
  */
 
+// Core animations (Framer Motion only)
 export { ScrollReveal, type ScrollRevealProps } from './ScrollReveal';
 export { PageTransition, type PageTransitionProps } from './PageTransition';

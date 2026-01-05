@@ -13,6 +13,7 @@ import { NavigationProvider, ThemeProvider } from '@/contexts';
 import { NavigationWrapper, MinimalTopBar } from '@/components/navigation';
 import { ThemeSwitcher } from '@/components/theme';
 import { ConsoleMessages, KonamiCodeEasterEgg } from '@/components/easter-eggs';
+import { Footer } from '@/components/layout';
 
 /**
  * Font Configurations
@@ -175,6 +176,9 @@ export default function RootLayout({
 
             {/* Main content */}
             <div className="relative z-0">{children}</div>
+
+            {/* Footer */}
+            <Footer />
 
             {/* Navigation system (Command Palette + Mobile Dock) */}
             <NavigationWrapper />

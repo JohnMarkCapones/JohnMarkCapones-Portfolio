@@ -45,22 +45,28 @@ export const NAV_ITEMS: NavItem[] = [
     description: 'Back to home',
   },
   {
+    label: 'About',
+    href: '/about',
+    icon: 'user',
+    description: 'Learn about me',
+  },
+  {
+    label: 'System Info',
+    href: '/system-info',
+    icon: 'terminal',
+    description: 'Technical details',
+  },
+  {
     label: 'Projects',
     href: '/projects',
     icon: 'folder',
     description: 'View my work',
   },
   {
-    label: 'System Info',
-    href: '/system-info',
-    icon: 'file',
-    description: 'Skills and resume',
-  },
-  {
     label: 'Stats',
     href: '/stats',
     icon: 'chart',
-    description: 'Metrics dashboard',
+    description: 'Development stats',
   },
   {
     label: 'Contact',
