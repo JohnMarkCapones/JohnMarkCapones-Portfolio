@@ -33,7 +33,7 @@ This checklist covers everything you need to do before deploying your portfolio 
 #### 1. Revoke Exposed API Key
 Your Resend API key was exposed in `.env.local`. You MUST:
 1. Go to [Resend Dashboard](https://resend.com/api-keys)
-2. Delete/revoke the key: `re_NCQzgHwm_Ca2iZF6XYL9gs3wMCHoANDoP`
+2. Delete/revoke the exposed key (the one that was in .env.local)
 3. Generate a new API key
 4. Update your `.env.local` with the new key
 5. Never commit `.env.local` to git

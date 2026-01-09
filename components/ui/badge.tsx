@@ -82,25 +82,27 @@ export interface BadgeProps
  * <Badge variant="glow">Featured</Badge>
  * ```
  */
-const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
-  ({ className, variant, size, icon, dot, dotColor, children, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={cn(badgeVariants({ variant, size }), className)}
-        {...props}
-      >
-        {dot && (
-          <span
-            className={cn('h-1.5 w-1.5 rounded-full', dotColor || 'bg-current')}
-            aria-hidden="true"
-          />
-        )}
-        {icon && <span className="shrink-0">{icon}</span>}
-        {children}
-      </div>
-    );
-  }
+const Badge = React.memo(
+  React.forwardRef<HTMLDivElement, BadgeProps>(
+    ({ className, variant, size, icon, dot, dotColor, children, ...props }, ref) => {
+      return (
+        <div
+          ref={ref}
+          className={cn(badgeVariants({ variant, size }), className)}
+          {...props}
+        >
+          {dot && (
+            <span
+              className={cn('h-1.5 w-1.5 rounded-full', dotColor || 'bg-current')}
+              aria-hidden="true"
+            />
+          )}
+          {icon && <span className="shrink-0">{icon}</span>}
+          {children}
+        </div>
+      );
+    }
+  )
 );
 
 Badge.displayName = 'Badge';

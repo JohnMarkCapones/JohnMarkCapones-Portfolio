@@ -6,14 +6,24 @@
 
 import type { Metadata, Viewport } from 'next';
 import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google';
+import dynamic from 'next/dynamic';
 
 import './globals.css';
 import { SITE_CONFIG } from '@/lib/constants';
 import { NavigationProvider, ThemeProvider } from '@/contexts';
 import { NavigationWrapper, MinimalTopBar } from '@/components/navigation';
 import { ThemeSwitcher } from '@/components/theme';
-import { ConsoleMessages, KonamiCodeEasterEgg } from '@/components/easter-eggs';
 import { Footer } from '@/components/layout';
+
+// Lazy load easter eggs - they're not needed for initial page load
+// Note: dynamic imports in Server Components don't need ssr: false in Next.js 16+
+const ConsoleMessages = dynamic(
+  () => import('@/components/easter-eggs').then((mod) => ({ default: mod.ConsoleMessages }))
+);
+
+const KonamiCodeEasterEgg = dynamic(
+  () => import('@/components/easter-eggs').then((mod) => ({ default: mod.KonamiCodeEasterEgg }))
+);
 
 /**
  * Font Configurations

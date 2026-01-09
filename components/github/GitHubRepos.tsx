@@ -5,11 +5,11 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { getPinnedRepos, type GitHubRepo } from '@/lib/github';
+import { useGitHubRepos } from '@/lib/hooks/useGitHubData';
+import { type GitHubRepo } from '@/lib/github';
 import { staggerContainer, staggerItem } from '@/lib/animations';
 
 /**
@@ -138,23 +138,8 @@ function RepoSkeleton() {
  * Displays top/pinned repositories with live statistics
  */
 export function GitHubRepos({ className, limit = 6 }: GitHubReposProps) {
-  const [repos, setRepos] = useState<GitHubRepo[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchRepos() {
-      try {
-        const data = await getPinnedRepos();
-        setRepos(data.slice(0, limit));
-      } catch (error) {
-        console.error('Failed to fetch GitHub repos:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchRepos();
-  }, [limit]);
+  // Use cached GitHub repos with 30-minute TTL
+  const { data: repos, loading } = useGitHubRepos(limit);
 
   return (
     <div className={className}>
@@ -176,7 +161,7 @@ export function GitHubRepos({ className, limit = 6 }: GitHubReposProps) {
             <RepoSkeleton key={index} />
           ))}
         </div>
-      ) : repos.length > 0 ? (
+      ) : repos && repos.length > 0 ? (
         <motion.div
           initial="hidden"
           whileInView="visible"

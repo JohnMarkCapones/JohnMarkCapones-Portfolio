@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -23,11 +23,20 @@ type WizardState = 'form' | 'submitting' | 'success' | 'error';
 
 const TOTAL_STEPS = 4;
 
-export function ContactWizard() {
+function ContactWizardForm() {
   const [currentStep, setCurrentStep] = useState(1);
   const [wizardState, setWizardState] = useState<WizardState>('form');
   const [errorMessage, setErrorMessage] = useState('');
   const [successData, setSuccessData] = useState<{ name: string; messageId: string } | null>(null);
+  const [csrfToken, setCsrfToken] = useState<string>('');
+
+  // Fetch CSRF token on mount
+  useEffect(() => {
+    fetch('/api/contact')
+      .then(res => res.json())
+      .then(data => setCsrfToken(data.csrfToken))
+      .catch(err => console.error('Failed to fetch CSRF token:', err));
+  }, []);
 
   // React Hook Form
   const {
@@ -73,10 +82,12 @@ export function ContactWizard() {
     setWizardState('submitting');
 
     try {
+      // Submit with CSRF token
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken,
         },
         body: JSON.stringify(data),
       });
@@ -214,4 +225,12 @@ export function ContactWizard() {
       </form>
     </div>
   );
+}
+
+/**
+ * ContactWizard
+ * Multi-step contact form with CSRF protection and rate limiting
+ */
+export function ContactWizard() {
+  return <ContactWizardForm />;
 }

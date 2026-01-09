@@ -19,6 +19,12 @@ export const metadata: Metadata = {
     'John Mark Capones - Aspiring Software Developer specializing in DevOps, Cloud Engineering, and Full-Stack Development',
 };
 
+/**
+ * ISR Configuration - Revalidate every 1 hour
+ * Pre-renders the page and regenerates it in the background
+ */
+export const revalidate = 3600; // 1 hour in seconds
+
 export default function HomePage() {
   const featuredProject = getFeaturedProject();
   const otherProjects = allProjects.slice(1, 4); // Get 3 other projects

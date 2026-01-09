@@ -8,6 +8,7 @@ import { Resend } from 'resend';
 import { contactFormSchema } from '@/lib/validations/contact';
 import { generateContactEmail, generateContactEmailText } from '@/lib/email/templates/contact-email';
 import { checkRateLimit } from '@/lib/utils/rate-limit';
+import { verifyCsrfToken, generateCsrfToken, setCsrfTokenCookie } from '@/lib/utils/csrf';
 
 // Lazy initialize Resend (only when needed)
 function getResendClient() {
@@ -26,8 +27,8 @@ export async function POST(request: NextRequest) {
     // Get IP address for rate limiting
     const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
 
-    // Check rate limit
-    const rateLimitResult = checkRateLimit(ip);
+    // Check rate limit (now async with Vercel KV)
+    const rateLimitResult = await checkRateLimit(ip);
 
     if (!rateLimitResult.allowed) {
       const resetTime = new Date(rateLimitResult.resetTime);
@@ -45,6 +46,18 @@ export async function POST(request: NextRequest) {
             'X-RateLimit-Reset': resetTime.toUTCString(),
           }
         }
+      );
+    }
+
+    // Verify CSRF token
+    const csrfValid = await verifyCsrfToken(request);
+    if (!csrfValid) {
+      return NextResponse.json(
+        {
+          error: 'CSRF validation failed',
+          message: 'Invalid security token. Please refresh the page and try again.',
+        },
+        { status: 403 }
       );
     }
 
@@ -140,12 +153,17 @@ export async function POST(request: NextRequest) {
 
 /**
  * GET /api/contact
- * Health check
+ * Health check and CSRF token generation
  */
 export async function GET() {
+  // Generate and set CSRF token
+  const csrfToken = generateCsrfToken();
+  await setCsrfTokenCookie(csrfToken);
+
   return NextResponse.json({
     status: 'ok',
     message: 'Contact API is running',
     timestamp: new Date().toISOString(),
+    csrfToken, // Return token for client use
   });
 }

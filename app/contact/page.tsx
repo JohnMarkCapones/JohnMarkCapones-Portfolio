@@ -6,9 +6,25 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
 import { socialLinks } from '@/data/personal';
 import { CONTACT_INFO } from '@/lib/constants';
-import { ContactWizard } from '@/components/contact/ContactWizard';
+
+// Lazy load ContactWizard - heavy component with reCAPTCHA and Framer Motion
+const ContactWizard = dynamic(
+  () => import('@/components/contact/ContactWizard').then((mod) => ({ default: mod.ContactWizard })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex min-h-[500px] items-center justify-center">
+        <div className="text-center">
+          <div className="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-primary/30 border-t-primary"></div>
+          <p className="text-text-secondary">Loading contact form...</p>
+        </div>
+      </div>
+    ),
+  }
+);
 
 export default function ContactPage() {
   return (

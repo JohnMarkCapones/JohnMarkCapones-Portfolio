@@ -96,18 +96,38 @@ export function MatrixRain({ show, duration = 5000, onComplete }: MatrixRainProp
       }
     }
 
-    // Animation loop
-    const interval = setInterval(draw, 50);
+    // Animation loop with requestAnimationFrame for better performance
+    let animationFrameId: number;
+    let lastFrameTime = Date.now();
+    const targetFPS = 20; // 50ms per frame (same as original setInterval)
+    const frameInterval = 1000 / targetFPS;
+
+    function animate() {
+      const now = Date.now();
+      const elapsed = now - lastFrameTime;
+
+      // Only draw if enough time has elapsed (throttle to target FPS)
+      if (elapsed >= frameInterval) {
+        draw();
+        lastFrameTime = now - (elapsed % frameInterval);
+      }
+
+      // Continue animation loop
+      animationFrameId = requestAnimationFrame(animate);
+    }
+
+    // Start animation
+    animationFrameId = requestAnimationFrame(animate);
 
     // Auto-stop after duration
     const timeout = setTimeout(() => {
-      clearInterval(interval);
+      cancelAnimationFrame(animationFrameId);
       onComplete?.();
     }, duration);
 
     // Cleanup
     return () => {
-      clearInterval(interval);
+      cancelAnimationFrame(animationFrameId);
       clearTimeout(timeout);
     };
   }, [show, duration, onComplete]);

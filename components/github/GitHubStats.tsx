@@ -5,11 +5,10 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { getGitHubStats, getMockContributions, getContributionStats, type GitHubStats } from '@/lib/github';
+import { useGitHubStats, useContributionStats } from '@/lib/hooks/useGitHubData';
 import { staggerContainer, staggerItem } from '@/lib/animations';
 
 /**
@@ -66,34 +65,11 @@ function StatCard({ icon, label, value, change, loading }: StatCardProps) {
  * Displays live statistics from GitHub API
  */
 export function GitHubStats({ className }: GitHubStatsProps) {
-  const [stats, setStats] = useState<GitHubStats | null>(null);
-  const [contributionStats, setContributionStats] = useState({
-    totalContributions: 0,
-    currentStreak: 0,
-    longestStreak: 0,
-  });
-  const [loading, setLoading] = useState(true);
+  // Use cached GitHub stats with 30-minute TTL
+  const { data: stats, loading: statsLoading } = useGitHubStats();
+  const { data: contributionStats, loading: contribLoading } = useContributionStats();
 
-  useEffect(() => {
-    async function fetchStats() {
-      try {
-        // Fetch GitHub stats
-        const githubStats = await getGitHubStats();
-        setStats(githubStats);
-
-        // Get contribution data
-        const contributions = getMockContributions();
-        const contribStats = getContributionStats(contributions);
-        setContributionStats(contribStats);
-      } catch (error) {
-        console.error('Failed to fetch GitHub stats:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchStats();
-  }, []);
+  const loading = statsLoading || contribLoading;
 
   return (
     <div className={className}>
@@ -163,7 +139,7 @@ export function GitHubStats({ className }: GitHubStatsProps) {
               </svg>
             }
             label="Contributions (2024)"
-            value={contributionStats.totalContributions}
+            value={contributionStats?.totalContributions || 0}
             loading={loading}
           />
         </motion.div>
@@ -187,7 +163,7 @@ export function GitHubStats({ className }: GitHubStatsProps) {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-text-primary">{contributionStats.currentStreak} days</p>
+                  <p className="text-2xl font-bold text-text-primary">{contributionStats?.currentStreak || 0} days</p>
                   <p className="text-sm text-text-tertiary">Current Streak</p>
                 </div>
               </div>
@@ -205,7 +181,7 @@ export function GitHubStats({ className }: GitHubStatsProps) {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-text-primary">{contributionStats.longestStreak} days</p>
+                  <p className="text-2xl font-bold text-text-primary">{contributionStats?.longestStreak || 0} days</p>
                   <p className="text-sm text-text-tertiary">Longest Streak</p>
                 </div>
               </div>
