@@ -79,7 +79,7 @@ export function Contact() {
           <motion.div
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: '-100px', amount: 0.2 }}
+            viewport={{ once: true, margin: '0px', amount: 0.1 }}
             variants={staggerContainer}
             className="grid gap-8 lg:grid-cols-2"
           >

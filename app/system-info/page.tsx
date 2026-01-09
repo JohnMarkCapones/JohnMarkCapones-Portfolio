@@ -12,6 +12,7 @@ import { EditorTabs } from '@/components/code-editor/EditorTabs';
 import { resumeFiles, getFileById, type FileItem } from '@/lib/resume-files';
 import { Badge } from '@/components/ui/badge';
 import { PageTransition } from '@/components/animations';
+import { downloadAllAsZip } from '@/lib/utils/download';
 
 /**
  * System Info Page Component
@@ -74,11 +75,15 @@ export default function SystemInfoPage() {
   };
 
   /**
-   * Download all as ZIP (future enhancement)
+   * Download all resume files as ZIP
    */
-  const handleDownloadAll = () => {
-    // TODO: Implement ZIP download of all files
-    alert('Download all functionality coming soon!');
+  const handleDownloadAll = async () => {
+    try {
+      await downloadAllAsZip(resumeFiles, 'john-mark-capones-resume-files.zip');
+    } catch (error) {
+      console.error('Failed to download files:', error);
+      alert('Failed to download files. Please try again.');
+    }
   };
 
   /**
@@ -129,7 +134,7 @@ export default function SystemInfoPage() {
       <div className="container-custom py-8">
         <div className="overflow-hidden rounded-lg border border-surface-border shadow-glow-lg">
           {/* VS Code Style Interface */}
-          <div className="flex h-[800px] bg-surface-primary">
+          <div className="flex h-[600px] md:h-[700px] lg:h-[800px] bg-surface-primary">
             {/* File Explorer */}
             <FileExplorer
               files={resumeFiles}

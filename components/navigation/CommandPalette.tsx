@@ -11,6 +11,7 @@ import { motion } from 'framer-motion';
 import { useKeyboardShortcut } from '@/hooks/useKeyboardShortcut';
 import { cn } from '@/lib/utils';
 import { NAV_ITEMS } from '@/lib/constants';
+import { downloadResume } from '@/lib/utils/download';
 
 /**
  * Command Item Definition
@@ -197,8 +198,7 @@ export function CommandPalette({ isOpen, onClose, customCommands = [] }: Command
         icon: 'download',
         category: 'Actions',
         action: () => {
-          // TODO: Implement resume download
-          console.log('Download resume');
+          downloadResume();
         },
       },
       {
@@ -417,7 +417,7 @@ export function CommandPalette({ isOpen, onClose, customCommands = [] }: Command
           </div>
 
           {/* Results */}
-          <div className="max-h-[450px] overflow-y-auto p-3">
+          <div className="max-h-[60vh] md:max-h-[450px] overflow-y-auto p-3">
             {filteredCommands.length === 0 ? (
               <div className="py-16 text-center">
                 <div className="mb-3 flex justify-center">

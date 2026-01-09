@@ -152,7 +152,7 @@ export function ImageGallery({ images, projectTitle }: ImageGalleryProps) {
               className="relative max-h-[90vh] max-w-6xl"
             >
               {/* Placeholder for full-size image */}
-              <div className="flex min-h-[400px] items-center justify-center rounded-lg border border-white/20 bg-gradient-to-br from-surface-secondary to-surface-tertiary p-12">
+              <div className="flex min-h-[250px] md:min-h-[400px] items-center justify-center rounded-lg border border-white/20 bg-gradient-to-br from-surface-secondary to-surface-tertiary p-12">
                 <div className="text-center text-white">
                   <svg
                     className="mx-auto mb-4 h-24 w-24 text-white/50"

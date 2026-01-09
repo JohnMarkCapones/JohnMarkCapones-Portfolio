@@ -209,7 +209,7 @@ function TerminalLine({ prompt, command, output, typing, className }: TerminalLi
 
   if (prompt && command) {
     return (
-      <div className={cn('flex gap-2 font-mono text-sm', className)}>
+      <div className={cn('flex gap-2 font-mono text-xs sm:text-sm whitespace-nowrap', className)}>
         <span className="text-accent-green">$</span>
         <span className="text-text-primary">{command}</span>
       </div>
@@ -217,7 +217,7 @@ function TerminalLine({ prompt, command, output, typing, className }: TerminalLi
   }
 
   return (
-    <div className={cn('font-mono text-sm text-text-secondary', className)}>
+    <div className={cn('font-mono text-xs sm:text-sm text-text-secondary whitespace-nowrap', className)}>
       {typing ? displayText : output}
       {typing && <span className="animate-pulse">▊</span>}
     </div>
@@ -335,7 +335,7 @@ export function Terminal({ initialLines, interactive = true, className }: Termin
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-lg border border-surface-border bg-code-bg p-4 shadow-glow-sm',
+        'relative overflow-x-auto rounded-lg border border-surface-border bg-code-bg p-2 sm:p-4 shadow-glow-sm',
         className
       )}
       onClick={handleTerminalClick}
@@ -347,7 +347,7 @@ export function Terminal({ initialLines, interactive = true, className }: Termin
           <div className="h-3 w-3 rounded-full bg-accent-amber"></div>
           <div className="h-3 w-3 rounded-full bg-accent-green"></div>
         </div>
-        <div className="ml-4 font-mono text-xs text-text-tertiary">
+        <div className="ml-2 sm:ml-4 font-mono text-[10px] sm:text-xs text-text-tertiary whitespace-nowrap">
           portfolio@capdev:~$ <span className="animate-pulse">▊</span>
         </div>
       </div>
@@ -355,7 +355,7 @@ export function Terminal({ initialLines, interactive = true, className }: Termin
       {/* Terminal Content */}
       <div
         ref={terminalRef}
-        className="max-h-[400px] overflow-y-auto scrollbar-hide md:max-h-[500px]"
+        className="max-h-[300px] overflow-y-auto overflow-x-auto scrollbar-hide md:max-h-[400px] lg:max-h-[500px]"
       >
         {/* Welcome Message */}
         {showWelcome && (

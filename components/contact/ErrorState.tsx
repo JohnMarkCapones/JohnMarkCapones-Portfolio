@@ -6,7 +6,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { CONTACT_INFO } from '@/lib/constants';
+import { CONTACT_INFO, SOCIAL_LINKS } from '@/lib/constants';
 
 interface ErrorStateProps {
   error: string;
@@ -21,7 +21,7 @@ export function ErrorState({ error, onRetry, onClose }: ErrorStateProps) {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.3 }}
-      className="flex min-h-[500px] flex-col items-center justify-center p-8 text-center"
+      className="flex min-h-[350px] md:min-h-[500px] flex-col items-center justify-center p-8 text-center"
     >
       {/* Error Icon */}
       <motion.div
@@ -100,12 +100,12 @@ export function ErrorState({ error, onRetry, onClose }: ErrorStateProps) {
           <div>
             <div className="mb-1 text-xs text-text-tertiary">GitHub:</div>
             <a
-              href="https://github.com/yourusername"
+              href={SOCIAL_LINKS.find(link => link.name === 'GitHub')?.url}
               target="_blank"
               rel="noopener noreferrer"
               className="block font-mono text-sm text-primary hover:underline"
             >
-              @yourusername
+              @{SOCIAL_LINKS.find(link => link.name === 'GitHub')?.username}
             </a>
           </div>
         </div>

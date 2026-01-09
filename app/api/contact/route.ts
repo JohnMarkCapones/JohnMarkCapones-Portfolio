@@ -11,10 +11,6 @@ import { checkRateLimit } from '@/lib/utils/rate-limit';
 
 // Lazy initialize Resend (only when needed)
 function getResendClient() {
-  console.log('🔍 DEBUG: Checking environment variables...');
-  console.log('RESEND_API_KEY exists?', !!process.env.RESEND_API_KEY);
-  console.log('RESEND_API_KEY value:', process.env.RESEND_API_KEY ? 're_***' + process.env.RESEND_API_KEY.slice(-4) : 'MISSING');
-
   if (!process.env.RESEND_API_KEY) {
     throw new Error('RESEND_API_KEY is not configured. Check your .env.local file and restart the dev server.');
   }
@@ -84,9 +80,14 @@ export async function POST(request: NextRequest) {
 
     // Send email via Resend
     const resend = getResendClient();
+
+    if (!process.env.RESEND_FROM_EMAIL || !process.env.RESEND_TO_EMAIL) {
+      throw new Error('Email configuration missing. Check RESEND_FROM_EMAIL and RESEND_TO_EMAIL in .env.local');
+    }
+
     const emailResult = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
-      to: process.env.RESEND_TO_EMAIL || 'jcapones93@gmail.com',
+      from: process.env.RESEND_FROM_EMAIL,
+      to: process.env.RESEND_TO_EMAIL,
       subject: `Portfolio Contact: ${data.name} - ${data.reason}`,
       html: htmlContent,
       text: textContent,

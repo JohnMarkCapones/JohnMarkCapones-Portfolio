@@ -53,7 +53,7 @@ export function TerminalWelcome({ lines, speed = 20, lineDelay = 100 }: Terminal
         const showCursor = !isComplete && isLastLine;
 
         return (
-          <div key={`welcome-${index}`} className="font-mono text-sm text-text-secondary">
+          <div key={`welcome-${index}`} className="font-mono text-xs sm:text-sm text-text-secondary whitespace-nowrap">
             {line}
             {showCursor && <span className="animate-pulse ml-0.5">▊</span>}
           </div>

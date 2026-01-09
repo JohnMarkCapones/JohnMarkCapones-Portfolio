@@ -21,7 +21,7 @@ export function StepReason({ value, error, onChange, onBack }: StepReasonProps) 
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.3 }}
-      className="min-h-[400px] flex flex-col items-center justify-center p-8 rounded-2xl border border-surface-border bg-surface-secondary/30 backdrop-blur-sm"
+      className="min-h-[300px] md:min-h-[400px] flex flex-col items-center justify-center p-8 rounded-2xl border border-surface-border bg-surface-secondary/30 backdrop-blur-sm"
     >
       {/* Icon */}
       <motion.div

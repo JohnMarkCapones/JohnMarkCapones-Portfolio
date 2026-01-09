@@ -112,7 +112,7 @@ export function GitHubStats({ className }: GitHubStatsProps) {
       <motion.div
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-100px', amount: 0.2 }}
+        viewport={{ once: true, margin: '0px', amount: 0.1 }}
         variants={staggerContainer}
         className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
       >
@@ -173,7 +173,7 @@ export function GitHubStats({ className }: GitHubStatsProps) {
       <motion.div
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: '-100px', amount: 0.2 }}
+        viewport={{ once: true, margin: '0px', amount: 0.1 }}
         variants={staggerContainer}
         className="mt-6 grid gap-6 sm:grid-cols-2"
       >

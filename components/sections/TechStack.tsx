@@ -22,15 +22,19 @@ function TechIcon({ icon, color, name }: { icon: string; color: string; name: st
   const iconUrl = `https://cdn.simpleicons.org/${icon}/${color.replace('#', '')}`;
 
   return (
-    <div className="relative h-12 w-12">
+    <div className="relative h-10 w-10 sm:h-12 sm:w-12">
       <img
         src={iconUrl}
         alt={`${name} logo`}
         className="h-full w-full object-contain"
+        loading="lazy"
+        width="48"
+        height="48"
         onError={(e) => {
           // Fallback to text if icon fails to load
           e.currentTarget.style.display = 'none';
-          e.currentTarget.parentElement!.innerHTML = `<div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-xl font-bold text-primary">${name.charAt(0)}</div>`;
+          const size = window.innerWidth < 640 ? 'h-10 w-10' : 'h-12 w-12';
+          e.currentTarget.parentElement!.innerHTML = `<div class="flex ${size} items-center justify-center rounded-lg bg-primary/10 text-xl font-bold text-primary">${name.charAt(0)}</div>`;
         }}
       />
     </div>
@@ -199,8 +203,8 @@ function TechCard({ tech }: { tech: TechItem }) {
         whileTap={{ scale: 0.98 }}
         onClick={() => setSelectedTech(tech)}
         className={cn(
-          'group relative cursor-pointer overflow-hidden rounded-2xl border border-surface-border bg-gradient-to-br from-surface-secondary to-surface-tertiary p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-glow-md',
-          tech.size === 'large' && 'p-8 md:col-span-2 md:row-span-2',
+          'group relative cursor-pointer overflow-hidden rounded-xl border border-surface-border bg-gradient-to-br from-surface-secondary to-surface-tertiary p-4 sm:p-5 transition-all duration-300 hover:border-primary/50 hover:shadow-glow-md',
+          tech.size === 'large' && 'sm:p-6 md:col-span-2 md:row-span-2',
           tech.size === 'medium' && 'md:col-span-2',
           tech.status === 'favorite' && 'border-accent-green/30'
         )}
@@ -220,13 +224,13 @@ function TechCard({ tech }: { tech: TechItem }) {
         {/* Content */}
         <div className="relative z-10">
           {/* Icon and Name */}
-          <div className={cn('mb-4 flex items-center gap-4', tech.size === 'large' && 'mb-6')}>
+          <div className={cn('mb-3 flex items-center gap-3 sm:gap-4', tech.size === 'large' && 'sm:mb-4')}>
             <motion.div
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.5 }}
               className={cn(
-                'rounded-xl p-3',
-                tech.size === 'large' && 'p-4'
+                'rounded-lg p-2 sm:p-3',
+                tech.size === 'large' && 'sm:p-3'
               )}
               style={{ backgroundColor: `${tech.color}15` }}
             >
@@ -236,15 +240,15 @@ function TechCard({ tech }: { tech: TechItem }) {
               <h3
                 className={cn(
                   'font-bold text-text-primary',
-                  tech.size === 'large' && 'text-2xl',
-                  tech.size === 'medium' && 'text-xl',
-                  tech.size === 'small' && 'text-lg'
+                  tech.size === 'large' && 'text-base sm:text-lg md:text-xl',
+                  tech.size === 'medium' && 'text-base sm:text-lg md:text-xl',
+                  tech.size === 'small' && 'text-sm sm:text-base md:text-lg'
                 )}
               >
                 {tech.name}
               </h3>
               {tech.size !== 'small' && (
-                <p className="text-sm text-text-tertiary">{tech.yearsOfExperience}</p>
+                <p className="text-xs sm:text-sm text-text-tertiary">{tech.yearsOfExperience}</p>
               )}
             </div>
           </div>
@@ -261,22 +265,22 @@ function TechCard({ tech }: { tech: TechItem }) {
                       ? 'success'
                       : 'warning'
                   }
-                  className="mb-4"
+                  className="mb-2 sm:mb-3"
                 >
                   {tech.status === 'expert' && '⭐ Expert'}
                   {tech.status === 'favorite' && '❤️ Favorite'}
                   {tech.status === 'learning' && '🔥 Current Focus'}
                 </Badge>
               )}
-              <p className="mb-4 text-sm leading-relaxed text-text-secondary">{tech.personality}</p>
+              <p className="mb-2 sm:mb-3 text-xs sm:text-sm leading-snug text-text-secondary line-clamp-3">{tech.personality}</p>
 
               {/* Proficiency Bar */}
-              <div className="mb-2">
-                <div className="mb-1 flex items-center justify-between text-xs">
+              <div>
+                <div className="mb-1 flex items-center justify-between text-[10px] sm:text-xs">
                   <span className="text-text-tertiary">Proficiency</span>
                   <span className="font-bold" style={{ color: tech.color }}>{tech.proficiency}%</span>
                 </div>
-                <div className="h-2 overflow-hidden rounded-full bg-surface-border">
+                <div className="h-1.5 sm:h-2 overflow-hidden rounded-full bg-surface-border">
                   <div
                     className="h-full rounded-full transition-all duration-500"
                     style={{
@@ -292,12 +296,12 @@ function TechCard({ tech }: { tech: TechItem }) {
           {/* Medium Card Content */}
           {tech.size === 'medium' && (
             <>
-              <p className="mb-3 line-clamp-2 text-sm text-text-secondary">{tech.personality}</p>
+              <p className="mb-2 line-clamp-2 text-xs sm:text-sm text-text-secondary leading-snug">{tech.personality}</p>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-text-tertiary">Click to learn more</span>
-                <div className="flex items-center gap-2">
+                <span className="text-[10px] sm:text-xs text-text-tertiary">Click to learn more</span>
+                <div className="flex items-center gap-1 sm:gap-1.5">
                   <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: tech.color }} />
-                  <span className="text-xs font-bold text-text-secondary">{tech.proficiency}%</span>
+                  <span className="text-[10px] sm:text-xs font-bold text-text-secondary">{tech.proficiency}%</span>
                 </div>
               </div>
             </>
@@ -306,14 +310,14 @@ function TechCard({ tech }: { tech: TechItem }) {
           {/* Small Card - Minimal */}
           {tech.size === 'small' && (
             <div className="flex items-center justify-between">
-              <span className="text-xs text-text-tertiary">{tech.yearsOfExperience}</span>
+              <span className="text-[10px] sm:text-xs text-text-tertiary">{tech.yearsOfExperience}</span>
             </div>
           )}
         </div>
 
         {/* Click Indicator */}
-        <div className="absolute bottom-2 right-2 opacity-0 transition-opacity group-hover:opacity-100">
-          <svg className="h-5 w-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="absolute bottom-1.5 right-1.5 sm:bottom-2 sm:right-2 opacity-0 transition-opacity group-hover:opacity-100">
+          <svg className="h-4 w-4 sm:h-5 sm:w-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
           </svg>
@@ -336,41 +340,41 @@ export function TechStack() {
     <section className="section-spacing">
       <div className="container-custom">
         {/* Header */}
-        <ScrollReveal variant={fadeInUp}>
-          <div className="mb-12 text-center">
+        <ScrollReveal variant={fadeInUp} viewport={{ once: true, margin: '0px', amount: 0.1 }}>
+          <div className="mb-8 sm:mb-12 text-center">
             <Badge variant="primary" className="mb-4">
               Technologies & Tools
             </Badge>
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">
+            <h2 className="mb-4 text-2xl font-bold sm:text-3xl md:text-4xl">
               My Tech Arsenal
             </h2>
-            <p className="mx-auto max-w-2xl text-text-secondary">
+            <p className="mx-auto max-w-2xl text-sm sm:text-base text-text-secondary px-4">
               Click on any technology to explore my capabilities, achievements, and what makes each tool special
             </p>
           </div>
         </ScrollReveal>
 
         {/* Stats */}
-        <ScrollReveal variant={fadeInUp} delay={0.1}>
-          <div className="mb-12 flex flex-wrap justify-center gap-4">
-            <div className="rounded-lg border border-surface-border bg-surface-secondary/50 px-6 py-3">
-              <span className="text-2xl font-bold text-primary">{techStats.totalTechnologies}</span>
-              <span className="ml-2 text-sm text-text-tertiary">Technologies</span>
+        <ScrollReveal variant={fadeInUp} delay={0.1} viewport={{ once: true, margin: '0px', amount: 0.05 }}>
+          <div className="mb-8 sm:mb-10 grid grid-cols-1 gap-3 sm:flex sm:flex-wrap sm:justify-center sm:gap-4">
+            <div className="rounded-lg border border-surface-border bg-surface-secondary/50 px-4 py-3 sm:px-6 text-center">
+              <div className="text-xl sm:text-2xl font-bold text-primary">{techStats.totalTechnologies}</div>
+              <div className="mt-1 text-xs sm:text-sm text-text-tertiary">Technologies</div>
             </div>
-            <div className="rounded-lg border border-surface-border bg-surface-secondary/50 px-6 py-3">
-              <span className="text-2xl font-bold text-accent-green">{techStats.expertLevel}</span>
-              <span className="ml-2 text-sm text-text-tertiary">Expert Level</span>
+            <div className="rounded-lg border border-surface-border bg-surface-secondary/50 px-4 py-3 sm:px-6 text-center">
+              <div className="text-xl sm:text-2xl font-bold text-accent-green">{techStats.expertLevel}</div>
+              <div className="mt-1 text-xs sm:text-sm text-text-tertiary">Expert Level</div>
             </div>
-            <div className="rounded-lg border border-surface-border bg-surface-secondary/50 px-6 py-3">
-              <span className="text-2xl font-bold text-accent-amber">{techStats.averageProficiency}%</span>
-              <span className="ml-2 text-sm text-text-tertiary">Avg Proficiency</span>
+            <div className="rounded-lg border border-surface-border bg-surface-secondary/50 px-4 py-3 sm:px-6 text-center">
+              <div className="text-xl sm:text-2xl font-bold text-accent-amber">{techStats.averageProficiency}%</div>
+              <div className="mt-1 text-xs sm:text-sm text-text-tertiary">Avg Proficiency</div>
             </div>
           </div>
         </ScrollReveal>
 
         {/* Bento Grid */}
-        <ScrollReveal variant={fadeInUp} delay={0.2}>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:gap-6">
+        <ScrollReveal variant={fadeInUp} delay={0.2} viewport={{ once: true, margin: '0px', amount: 0.1 }}>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-4 lg:gap-5">
             {techStack.map((tech) => (
               <TechCard key={tech.id} tech={tech} />
             ))}
@@ -378,9 +382,9 @@ export function TechStack() {
         </ScrollReveal>
 
         {/* Footer Note */}
-        <ScrollReveal variant={fadeInUp} delay={0.3}>
-          <div className="mt-12 text-center">
-            <p className="text-sm text-text-tertiary">
+        <ScrollReveal variant={fadeInUp} delay={0.3} viewport={{ once: true, margin: '0px', amount: 0.1 }}>
+          <div className="mt-8 sm:mt-10 text-center">
+            <p className="text-xs sm:text-sm text-text-tertiary">
               💡 Always learning and exploring new technologies
             </p>
           </div>

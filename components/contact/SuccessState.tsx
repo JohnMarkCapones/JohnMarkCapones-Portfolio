@@ -28,7 +28,7 @@ export function SuccessState({ name, messageId, onClose }: SuccessStateProps) {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, type: 'spring' }}
-      className="flex min-h-[500px] flex-col items-center justify-center p-8 text-center"
+      className="flex min-h-[350px] md:min-h-[500px] flex-col items-center justify-center p-8 text-center"
     >
       {/* Confetti Animation */}
       {showConfetti && (
