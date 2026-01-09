@@ -6,6 +6,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -48,28 +49,14 @@ export function ImageGallery({ images, projectTitle }: ImageGalleryProps) {
             onClick={() => openLightbox(index)}
             className="group relative aspect-video cursor-pointer overflow-hidden rounded-lg border border-surface-border bg-surface-secondary"
           >
-            {/* Placeholder for actual image */}
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-surface-secondary to-surface-tertiary">
-              <div className="text-center">
-                <svg
-                  className="mx-auto mb-2 h-12 w-12 text-text-tertiary"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-                <p className="text-xs text-text-tertiary">Screenshot {index + 1}</p>
-                <p className="mt-1 text-xs text-text-tertiary opacity-70">
-                  {image.split('/').pop()?.replace(/\.[^/.]+$/, '').replace(/-/g, ' ')}
-                </p>
-              </div>
-            </div>
+            {/* Actual Image */}
+            <Image
+              src={image}
+              alt={`${projectTitle} - Screenshot ${index + 1}`}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
 
             {/* Hover Overlay */}
             <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
@@ -151,33 +138,16 @@ export function ImageGallery({ images, projectTitle }: ImageGalleryProps) {
               onClick={(e) => e.stopPropagation()}
               className="relative max-h-[90vh] max-w-6xl"
             >
-              {/* Placeholder for full-size image */}
-              <div className="flex min-h-[250px] md:min-h-[400px] items-center justify-center rounded-lg border border-white/20 bg-gradient-to-br from-surface-secondary to-surface-tertiary p-12">
-                <div className="text-center text-white">
-                  <svg
-                    className="mx-auto mb-4 h-24 w-24 text-white/50"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  <p className="mb-2 text-lg font-medium">{projectTitle}</p>
-                  <p className="text-sm text-white/70">
-                    {images[selectedIndex]?.split('/').pop()?.replace(/\.[^/.]+$/, '').replace(/-/g, ' ')}
-                  </p>
-                  <p className="mt-4 text-xs text-white/50">
-                    Image {selectedIndex + 1} of {images.length}
-                  </p>
-                  <p className="mt-2 text-xs text-white/50">
-                    Use arrow keys or buttons to navigate • ESC to close
-                  </p>
-                </div>
+              {/* Full-size image */}
+              <div className="relative h-full w-full">
+                <Image
+                  src={images[selectedIndex]!}
+                  alt={`${projectTitle} - Screenshot ${selectedIndex + 1}`}
+                  width={1920}
+                  height={1080}
+                  className="h-auto max-h-[90vh] w-auto max-w-full rounded-lg"
+                  priority
+                />
               </div>
             </motion.div>
 

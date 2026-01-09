@@ -86,10 +86,10 @@ export const campusConnect: Project = {
   },
 
   images: [
-    '/projects/campus-connect/dashboard.png',
-    '/projects/campus-connect/quiz-system.png',
-    '/projects/campus-connect/student-management.png',
-    '/projects/campus-connect/mobile-app.png',
+    '/projects/campus-connect/dashboard.jpg',
+    '/projects/campus-connect/monitoring-system.jpg',
+    '/projects/campus-connect/student-management.jpg',
+    '/projects/campus-connect/footer.jpg',
   ],
 
   status: 'live',
