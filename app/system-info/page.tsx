@@ -96,25 +96,25 @@ export default function SystemInfoPage() {
       <main className="relative min-h-screen bg-surface-primary">
       {/* Header */}
       <div className="border-b border-surface-border bg-surface-secondary">
-        <div className="container-custom flex items-center justify-between py-6">
-          <div>
-            <div className="mb-2 flex items-center gap-2">
-              <Badge variant="success" dot>
-                System Info
-              </Badge>
-              <Badge variant="secondary">Resume</Badge>
+        <div className="container-custom py-4 md:py-6">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1">
+              <div className="mb-2 flex flex-wrap items-center gap-2">
+                <Badge variant="success" dot>
+                  System Info
+                </Badge>
+                <Badge variant="secondary">Resume</Badge>
+              </div>
+              <h1 className="mb-2 text-2xl font-bold md:text-3xl lg:text-4xl">Human Configuration</h1>
+              <p className="text-sm md:text-base text-text-secondary">
+                My resume presented as code. <span className="hidden sm:inline">Because developers read code better than PDFs.</span>
+              </p>
             </div>
-            <h1 className="mb-2 text-3xl font-bold md:text-4xl">Human Configuration</h1>
-            <p className="text-text-secondary">
-              My resume presented as code. Because developers read code better than PDFs.
-            </p>
-          </div>
 
-          {/* Actions */}
-          <div className="hidden md:flex items-center gap-2">
+            {/* Actions */}
             <button
               onClick={handleDownloadAll}
-              className="flex items-center gap-2 rounded-md border border-surface-border bg-surface-secondary px-4 py-2 text-sm transition-colors hover:bg-surface-tertiary"
+              className="flex shrink-0 items-center gap-2 rounded-md border border-surface-border bg-surface-primary px-3 py-2 text-sm transition-colors hover:bg-surface-tertiary md:px-4"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -124,7 +124,7 @@ export default function SystemInfoPage() {
                   d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                 />
               </svg>
-              Download All
+              <span className="hidden sm:inline">Download All</span>
             </button>
           </div>
         </div>
@@ -133,34 +133,65 @@ export default function SystemInfoPage() {
       {/* Editor Container */}
       <div className="container-custom py-8">
         <div className="overflow-hidden rounded-lg border border-surface-border shadow-glow-lg">
+          {/* Mobile File Selector (shown only on mobile) */}
+          <div className="md:hidden border-b border-surface-border bg-surface-secondary">
+            <select
+              value={activeFileId}
+              onChange={(e) => {
+                const file = getFileById(e.target.value);
+                if (file) handleFileSelect(file);
+              }}
+              className="w-full bg-surface-secondary px-4 py-3 text-sm text-text-primary outline-none"
+            >
+              <option value="" disabled>Select a file...</option>
+              {resumeFiles[0]?.children?.map((file) => (
+                <option key={file.id} value={file.id}>
+                  {file.icon} {file.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* VS Code Style Interface */}
-          <div className="flex h-[600px] md:h-[700px] lg:h-[800px] bg-surface-primary">
-            {/* File Explorer */}
-            <FileExplorer
-              files={resumeFiles}
-              activeFileId={activeFileId}
-              onFileSelect={handleFileSelect}
-            />
+          <div className="flex bg-surface-primary" style={{ minHeight: '500px' }}>
+            {/* File Explorer - Desktop Only */}
+            <div className="hidden md:block">
+              <FileExplorer
+                files={resumeFiles}
+                activeFileId={activeFileId}
+                onFileSelect={handleFileSelect}
+              />
+            </div>
 
             {/* Editor Area */}
             <div className="flex flex-1 flex-col">
-              {/* Tabs */}
-              <EditorTabs
-                files={openFiles}
-                activeFileId={activeFileId}
-                onTabClick={handleTabClick}
-                onTabClose={handleTabClose}
-              />
+              {/* Tabs - Desktop Only */}
+              <div className="hidden md:block">
+                <EditorTabs
+                  files={openFiles}
+                  activeFileId={activeFileId}
+                  onTabClick={handleTabClick}
+                  onTabClose={handleTabClose}
+                />
+              </div>
+
+              {/* Mobile Active File Tab */}
+              <div className="md:hidden border-b border-surface-border bg-surface-tertiary px-4 py-2">
+                <div className="flex items-center gap-2 text-sm">
+                  <span>{activeFile?.icon}</span>
+                  <span className="font-medium text-text-primary">{activeFile?.name}</span>
+                </div>
+              </div>
 
               {/* Code Editor */}
               {activeFile ? (
                 <CodeEditor file={activeFile} showLineNumbers={true} readOnly={true} />
               ) : (
-                <div className="flex flex-1 items-center justify-center bg-code-bg">
+                <div className="flex flex-1 items-center justify-center bg-code-bg p-8">
                   <div className="text-center">
                     <p className="mb-4 text-lg text-text-secondary">No file open</p>
                     <p className="text-sm text-text-tertiary">
-                      Select a file from the explorer to view its contents
+                      Select a file from the dropdown above to view its contents
                     </p>
                   </div>
                 </div>
@@ -170,14 +201,17 @@ export default function SystemInfoPage() {
         </div>
 
         {/* Instructions */}
-        <div className="mt-8 rounded-lg border border-surface-border bg-surface-secondary p-6">
-          <h2 className="mb-4 text-xl font-bold">How to Use</h2>
-          <div className="grid gap-4 md:grid-cols-3">
+        <div className="mt-8 rounded-lg border border-surface-border bg-surface-secondary p-4 md:p-6">
+          <h2 className="mb-4 text-lg md:text-xl font-bold">How to Use</h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div>
-              <h3 className="mb-2 font-medium text-primary">📁 Explorer</h3>
+              <h3 className="mb-2 font-medium text-primary">
+                <span className="md:hidden">📁 Select Files</span>
+                <span className="hidden md:inline">📁 Explorer</span>
+              </h3>
               <p className="text-sm text-text-secondary">
-                Click files in the sidebar to open them. Each file contains different aspects of
-                my resume.
+                <span className="md:hidden">Use the dropdown to switch between resume files.</span>
+                <span className="hidden md:inline">Click files in the sidebar to open them. Each file contains different aspects of my resume.</span>
               </p>
             </div>
             <div>
@@ -186,7 +220,7 @@ export default function SystemInfoPage() {
                 Use the buttons in each file to copy code or download individual files.
               </p>
             </div>
-            <div>
+            <div className="sm:col-span-2 lg:col-span-1">
               <h3 className="mb-2 font-medium text-primary">🔍 Explore</h3>
               <p className="text-sm text-text-secondary">
                 Each file type (JSON, YAML, Markdown) shows data in different formats. Pick your
@@ -197,18 +231,18 @@ export default function SystemInfoPage() {
         </div>
 
         {/* File Guide */}
-        <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {resumeFiles[0]?.children?.map((file) => (
             <button
               key={file.id}
               onClick={() => handleFileSelect(file)}
-              className="group rounded-lg border border-surface-border bg-surface-secondary p-4 text-left transition-all hover:border-primary/50 hover:shadow-glow-sm"
+              className="group rounded-lg border border-surface-border bg-surface-secondary p-3 md:p-4 text-left transition-all hover:border-primary/50 hover:shadow-glow-sm active:scale-95"
             >
               <div className="mb-2 flex items-center gap-2">
-                <span className="text-2xl">{file.icon}</span>
-                <span className="text-sm font-medium group-hover:text-primary">{file.name}</span>
+                <span className="text-xl md:text-2xl">{file.icon}</span>
+                <span className="text-xs md:text-sm font-medium group-hover:text-primary">{file.name}</span>
               </div>
-              <p className="text-xs text-text-tertiary">
+              <p className="text-xs text-text-tertiary line-clamp-2">
                 {file.id === 'readme' && 'Introduction and overview'}
                 {file.id === 'resume' && 'Full resume in JSON Resume format'}
                 {file.id === 'skills' && 'Technical skills with proficiency levels'}
