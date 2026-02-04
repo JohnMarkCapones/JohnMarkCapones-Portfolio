@@ -14,6 +14,7 @@ import { NavigationProvider, ThemeProvider } from '@/contexts';
 import { NavigationWrapper, MinimalTopBar } from '@/components/navigation';
 import { ThemeSwitcher } from '@/components/theme';
 import { Footer } from '@/components/layout';
+import { SplashCursorClient } from '@/components/animations/SplashCursorClient';
 
 // Lazy load easter eggs - they're not needed for initial page load
 // Note: dynamic imports in Server Components don't need ssr: false in Next.js 16+
@@ -180,6 +181,9 @@ export default function RootLayout({
 
             {/* Grid background */}
             <div className="grid-background fixed inset-0 -z-10 opacity-10" />
+
+            {/* Splash Cursor (React Bits) – fluid effect behind content; client-only */}
+            <SplashCursorClient />
 
             {/* Minimal Top Bar (Desktop) */}
             <MinimalTopBar />

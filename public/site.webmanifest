@@ -1,0 +1,10 @@
+{
+  "name": "John Mark Capones Portfolio",
+  "short_name": "Capones Portfolio",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "icons": []
+}
+

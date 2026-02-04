@@ -11,6 +11,7 @@ import { Terminal } from './Terminal';
 import { AnimatedButton } from '@/components/ui/animated-button';
 import { Badge } from '@/components/ui/badge';
 import { personalInfo } from '@/data/personal';
+import { LaserFlowToTerminal } from '@/components/animations';
 import { cn } from '@/lib/utils';
 
 /**
@@ -143,6 +144,9 @@ export function Hero({ showBootSequence = false, className }: HeroProps) {
         <div className="absolute inset-0 bg-gradient-radial from-primary/5 via-transparent to-transparent opacity-30" />
         <div className="absolute left-1/2 top-1/2 h-[300px] w-[300px] md:h-[400px] md:w-[400px] lg:h-[500px] lg:w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[100px]" />
       </div>
+
+      {/* Laser Flow to Terminal - only show when terminal is visible */}
+      {showTerminal && <LaserFlowToTerminal color="#00D9FF" />}
 
       <div className="container-custom relative z-10 py-20">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">

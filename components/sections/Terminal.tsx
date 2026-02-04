@@ -334,6 +334,7 @@ export function Terminal({ initialLines, interactive = true, className }: Termin
 
   return (
     <div
+      data-terminal
       className={cn(
         'relative overflow-x-auto rounded-lg border border-surface-border bg-code-bg p-2 sm:p-4 shadow-glow-sm',
         className
