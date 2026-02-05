@@ -2,6 +2,10 @@
   "mcpServers": {
     "shadcn": {
       "url": "https://www.shadcn.io/api/mcp"
+    },
+    "reactbits": {
+      "command": "npx",
+      "args": ["-y", "reactbits-dev-mcp-server"]
     }
   }
 }

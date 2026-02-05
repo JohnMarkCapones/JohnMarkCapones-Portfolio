@@ -31,6 +31,7 @@
     "@types/node": "^25.0.3",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.182.0",
     "@vercel/kv": "^3.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -42,12 +43,11 @@
     "react-hook-form": "^7.69.0",
     "resend": "^6.6.0",
     "tailwind-merge": "^3.4.0",
-    "three": "^0.167.1",
+    "three": "^0.182.0",
     "typescript": "^5.9.3",
     "zod": "^4.3.4"
   },
   "devDependencies": {
-    "@types/three": "^0.182.0",
     "autoprefixer": "^10.4.23",
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.1",
