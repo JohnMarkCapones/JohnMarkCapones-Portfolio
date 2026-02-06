@@ -12,6 +12,7 @@ import { AnimatedButton } from '@/components/ui/animated-button';
 import { Badge } from '@/components/ui/badge';
 import { personalInfo } from '@/data/personal';
 import { cn } from '@/lib/utils';
+import { LaserFlow } from '@/components/LaserFlow';
 
 /**
  * Boot Sequence Component
@@ -138,7 +139,32 @@ export function Hero({ showBootSequence = false, className }: HeroProps) {
         className
       )}
     >
-      {/* Background Effects */}
+      {/* LaserFlow Background - aligned to reach the terminal area */}
+      <div className="absolute inset-0 -z-20 hidden md:block ">
+        <LaserFlow
+          className="absolute inset-0"
+          // Slightly denser wisps so the beam feels alive around the terminal
+          wispDensity={1}
+          // Smooth but responsive mouse tilt
+          mouseSmoothTime={0.2}
+          mouseTiltStrength={0.03}
+          // Push the beam horizontally so it visually lines up with the terminal,
+          // which sits on the right side of the hero on large screens.
+          horizontalBeamOffset={0.20}
+          // Push the beam origin further toward the top of the hero so it
+          // clearly starts at the top edge and travels down into the terminal.
+          verticalBeamOffset={0.11}
+          // Extend the vertical reach of the beam so it runs from the top of the hero
+          // down through the terminal area instead of stopping short.
+          verticalSizing={2.6}
+          // Make the fog a bit more subtle so it doesn't overpower the content.
+          fogIntensity={0.1}
+          // Match the portfolio accent color; tweak to taste.
+          color="#3B82F6"
+        />
+      </div>
+
+      {/* Background Effects layered above the beam for a soft glow */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-radial from-primary/5 via-transparent to-transparent opacity-30" />
         <div className="absolute left-1/2 top-1/2 h-[300px] w-[300px] md:h-[400px] md:w-[400px] lg:h-[500px] lg:w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[100px]" />
@@ -231,27 +257,29 @@ export function Hero({ showBootSequence = false, className }: HeroProps) {
           {/* Right Column - Terminal */}
           <div
             className={cn(
-              'flex items-center justify-center transition-all duration-700',
+              'relative flex items-center justify-center transition-all duration-700',
               showTerminal ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             )}
           >
-            <Terminal
-              className="w-full max-w-2xl overflow-x-hidden"
-              interactive={true}
-              initialLines={[
-                '┌─────────────────────────────────────────────────────────┐',
-                '│        Welcome to John Mark Capones Portfolio           │',
-                '│                   Terminal Interface v1.0                │',
-                '└─────────────────────────────────────────────────────────┘',
-                '',
-                '> Building systems that scale...',
-                '> Solving problems that matter...',
-                '',
-                'Type "help" to explore available commands.',
-                'Type "whoami" to learn more about me.',
-                '',
-              ]}
-            />
+            <div className="w-full max-w-2xl">
+              <Terminal
+                className="w-full overflow-x-hidden"
+                interactive={true}
+                initialLines={[
+                  '┌─────────────────────────────────────────────────────────┐',
+                  '│        Welcome to John Mark Capones Portfolio           │',
+                  '│                   Terminal Interface v1.0                │',
+                  '└─────────────────────────────────────────────────────────┘',
+                  '',
+                  '> Building systems that scale...',
+                  '> Solving problems that matter...',
+                  '',
+                  'Type "help" to explore available commands.',
+                  'Type "whoami" to learn more about me.',
+                  '',
+                ]}
+              />
+            </div>
           </div>
         </div>
       </div>
