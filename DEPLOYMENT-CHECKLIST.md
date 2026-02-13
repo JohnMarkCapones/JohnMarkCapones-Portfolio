@@ -208,6 +208,7 @@ If you encounter issues:
 2. Check server logs in Vercel dashboard
 3. Verify all environment variables are set
 4. Ensure all required files are in `/public`
+5. make sure to chat the developer
 
 ---
 
@@ -220,5 +221,5 @@ If you encounter issues:
 
 ---
 
-**Last Updated:** 2026-01-09
+**Last Updated:** 2026-02-13
 **Status:** Ready for deployment after adding public assets and revoking API key
